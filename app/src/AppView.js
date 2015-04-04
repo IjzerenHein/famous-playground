@@ -5,28 +5,99 @@ define(function(require) {
 
 	// import dependencies
 	var View = require('famous/core/View');
-	var Modifier = require('famous/core/Modifier');
-	var ImageSurface = require('famous/surfaces/ImageSurface');
-	var Transform = require('famous/core/Transform');
+	var Surface = require('famous/core/Surface');
+	var HeaderFooterLayout = require('famous/views/HeaderFooterLayout');
+	var FlexScrollView = require('famous-flex/FlexScrollView');
 
 	function AppView() {
 		View.apply(this, arguments);
 
-		// Show sample famo.us logo
-		var logo = new ImageSurface({
-				size: [200, 200],
-				content: require('assets/images/famous_logo.png'),
-				classes: ['double-sided']
+		var hf = new HeaderFooterLayout({
+			headerSize: 40,
+			footerSize: 40
 		});
-		var initialTime = Date.now();
-		var centerSpinModifier = new Modifier({
-				origin: [0.5, 0.5],
-				align: [0.5, 0.5],
-				transform: function() {
-						return Transform.rotateY(.002 * (Date.now() - initialTime));
+		this.add(hf);
+		hf.header.add(new Surface({
+			classes: ['surface', 'blue'],
+			content: '<div>Header</div>'
+		}));
+		hf.footer.add(new Surface({
+			classes: ['surface', 'red'],
+			content: '<div>Footer</div>'
+		}));
+
+		/**
+		 * ScrollView delegate.
+		 */
+		var minHeaderHeight = 40;
+		var maxHeaderHeight = 200;
+		var leadingScrollViewDelegate = {
+
+			/**
+			 * Called by the FlexScrollView to ask whether and how far the
+			 * the leading scrollview can be scrolled in delta direction.
+			 */
+			canScroll: function(delta) {
+				//console.log('canScroll: ' + delta);
+				if (delta < 0) {
+					return Math.max(minHeaderHeight - hf.options.headerSize, delta);
 				}
+				else {
+					return Math.min(maxHeaderHeight - hf.options.headerSize, delta);
+				}
+			},
+
+			/**
+			 * Called by the FlexScrollView when someone starts scrolling, and informs
+			 * the leading view that the leading view should be scrolled by x pixels.
+			 */
+			applyScrollForce: function(delta) {
+				//console.log('applyScrollForce: ' + delta);
+				hf.setOptions({
+					headerSize: Math.max(Math.min(hf.options.headerSize + delta, maxHeaderHeight), minHeaderHeight)
+				});
+			},
+
+			/**
+			 * Called by the FlexScrollView while someone is scrolling, and informs
+			 * the leading view that the leading view should be scrolled by x pixels.
+			 */
+			updateScrollForce: function(oldDelta, newDelta) {
+				var delta = (newDelta - oldDelta);
+				//console.log('updateScrollForce: ' + delta);
+				hf.setOptions({
+					headerSize: Math.max(Math.min(hf.options.headerSize + delta, maxHeaderHeight), minHeaderHeight)
+				});
+			},
+
+			/**
+			 * Called by the FlexScrollView when someone stops scrolling (releases finger or mouse),
+			 * and informs the leading view of the final delta and release velocity.
+			 */
+			releaseScrollForce: function(delta, velocity) {
+				//console.log('releaseScrollForce: ' + delta + ', velocity: ' + velocity);
+			}
+		};
+
+		var scrollView = new FlexScrollView({
+			leadingScrollView: leadingScrollViewDelegate,
+			useContainer: true,
+			mouseMove: true,
+			overscroll: false
 		});
-		this.add(centerSpinModifier).add(logo);
+		hf.content.add(scrollView);
+		for (var i = 0; i < 50; i++) {
+			scrollView.push(new Surface({
+				classes: ['surface', 'green'],
+				size: [undefined, 50],
+				content: '<div>Surface</div>'
+			}));
+			scrollView.push(new Surface({
+				classes: ['surface', 'yellow'],
+				size: [undefined, 50],
+				content: '<div>Surface</div>'
+			}));
+		}
 	}
 	AppView.prototype = Object.create(View.prototype);
 	AppView.prototype.constructor = AppView;

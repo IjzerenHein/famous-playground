@@ -7,3 +7,35 @@ html {
 	-webkit-backface-visibility: visible;
 	backface-visibility: visible;
 }
+
+.surface {
+	-moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+
+	text-align: center;
+	> div {
+		position: relative;
+	  top: 50%;
+	  -webkit-transform: translateY(-50%);
+	  -moz-transform: translateY(-50%);
+	  -ms-transform: translateY(-50%);
+	  -o-transform: translateY(-50%);
+	  transform: translateY(-50%);
+	  display: block;
+	}
+	&.red {
+		background-color: red;
+	}
+	&.blue {
+		background-color: blue;
+	}
+	&.yellow {
+		background-color: yellow;
+	}
+	&.green {
+		background-color: green;
+	}
+}
