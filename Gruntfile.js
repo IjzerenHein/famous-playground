@@ -31,8 +31,8 @@ module.exports = function(grunt) {
           port: 21,
           authKey: 'gloey.nl'
         },
-        src: 'dist',
-        dest: '/domains/gloey.nl/htdocs/www/apps/playground'
+        src: 'www',
+        dest: '/domains/gloey.nl/htdocs/www/apps/setContent'
       }
     },
 		exec: {
