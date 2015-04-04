@@ -7,3 +7,38 @@ html {
 	-webkit-backface-visibility: visible;
 	backface-visibility: visible;
 }
+
+.btn {
+	border-radius: 3px;
+	background-color: #EEEEEE;
+	text-align: center;
+	cursor: pointer;
+	&:active, &:hover {background-color: #DDDDDD;}
+	> div {
+		position: relative;
+	  top: 50%;
+	  -webkit-transform: translateY(-50%);
+	  -moz-transform: translateY(-50%);
+	  -ms-transform: translateY(-50%);
+	  -o-transform: translateY(-50%);
+	  transform: translateY(-50%);
+	  display: block;
+	}
+}
+
+.content {
+	border-radius: 3px;
+	border: 1px solid #999999;
+	color: blue;
+	text-align: center;
+	> div {
+		position: relative;
+	  top: 50%;
+	  -webkit-transform: translateY(-50%);
+	  -moz-transform: translateY(-50%);
+	  -ms-transform: translateY(-50%);
+	  -o-transform: translateY(-50%);
+	  transform: translateY(-50%);
+	  display: block;
+	}
+}
