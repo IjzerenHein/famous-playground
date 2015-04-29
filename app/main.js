@@ -10,18 +10,25 @@ define(function(require) {
 	require('./index.html');
 	require('famous-polyfills');
 	require('famous/core/famous.css');
-	require('famous-flex/widgets/styles.css');
 	require('./assets/favicon.ico');
 	require('styles/styles.less');
-	var Engine = require('famous/core/Engine');
-	var FastClick = require('fastclick/lib/fastclick');
-	var AppView = require('./src/AppView');
+	var ViewSequence = require('famous/core/ViewSequence');
+	var Surface = require('famous/core/Surface');
 
-	// Enable fast-click
-	FastClick.attach(document.body);
+	function log(viewSequence) {
+		var idx = 0;
+		var node = viewSequence.get();
+		while (node) {
+			console.log(idx + ': ' + node.content);
+			idx++;
+			viewSequence = viewSequence.getNext();
+			node = viewSequence ? viewSequence.get() : undefined;
+		}
+	}
 
-	// Create root context and show initial entrance view
-	var mainContext = Engine.createContext();
-	var appView = new AppView();
-	mainContext.add(appView);
+	var viewSequence = new ViewSequence();
+	viewSequence.splice(0, 0, new Surface({content: 'surface 1'}));
+	viewSequence.splice(1, 0, new Surface({content: 'surface 2'}));
+	viewSequence.push(new Surface({content: 'surface 3'}));
+	log(viewSequence);
 });
