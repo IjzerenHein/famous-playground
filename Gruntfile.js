@@ -32,7 +32,7 @@ module.exports = function(grunt) {
           authKey: 'gloey.nl'
         },
         src: 'www',
-        dest: '/domains/gloey.nl/htdocs/www/apps/playground'
+        dest: '/domains/gloey.nl/htdocs/www/apps/scrollview4'
       }
     },
 		exec: {
